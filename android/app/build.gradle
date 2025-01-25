@@ -28,19 +28,29 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file("C:/Users/CRIZMA MEGA STORE/StudioProjects/youssef/android/app/release-key-new.jks")
+            storePassword "123456"
+            keyAlias "yasmen3"
+            keyPassword "123456"
+        }
+    }
+
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
         }
     }
 }
 
-
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'com.android.tools:desugar_jdk_libs:1.1.5'
+    // Remove the duplicate entry for desugar_jdk_libs
 }
-
 
 flutter {
     source = "../.."

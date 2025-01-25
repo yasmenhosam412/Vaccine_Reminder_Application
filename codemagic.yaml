@@ -1,9 +1,11 @@
 workflows:
-  ios_android:
-    name: iOS and Android build
-    max_build_duration: 60
-    environment:
-      flutter: stable
+  ios:
+    name: iOS Development Workflow
+    max_build_duration: 120
+    build:
+      ios:
+        scheme: "ios-development"
+        release: false
 
     scripts:
       - name: Install dependencies
