@@ -1,0 +1,28 @@
+workflows:
+  ios_android:
+    name: iOS and Android build
+    max_build_duration: 60
+    environment:
+      flutter: stable
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+    # Android build section
+    android:
+      build:
+        targets:
+          - app
+
+    # iOS build section
+    ios:
+      build:
+        targets:
+          - Runner
+        export_method: ad-hoc  # Change to "app-store" if you're targeting App Store distribution
+      distribution:
+        method: ad-hoc  # Change to "app-store" if you're distributing via the App Store
+        export_options:
+          provisioning_profile: auto  # Codemagic will use the uploaded profile
