@@ -10,19 +10,17 @@ workflows:
         script: |
           flutter pub get
 
-    # Android build section
-    android:
-      build:
-        targets:
-          - app
+      # Android build section
+      - name: Build Android app
+        script: |
+          flutter build apk --release
 
-    # iOS build section
-    ios:
-      build:
-        targets:
-          - Runner
-        export_method: ad-hoc  # Change to "app-store" if you're targeting App Store distribution
-      distribution:
-        method: ad-hoc  # Change to "app-store" if you're distributing via the App Store
-        export_options:
-          provisioning_profile: auto  # Codemagic will use the uploaded profile
+      # iOS build section
+      - name: Build iOS app
+        script: |
+          flutter build ios --release --no-codesign
+
+      # iOS distribution (optional step, if you want to distribute the app)
+      - name: Distribute iOS app
+        script: |
+          flutter build ios --release --export-method ad-hoc
