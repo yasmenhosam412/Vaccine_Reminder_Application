@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "430197957945",
+    "project_id": "newpet-2453f",
+    "storage_bucket": "newpet-2453f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430197957945:android:d7e11c933ac36feba8b4e8",
+        "android_client_info": {
+          "package_name": "com.example.youssef"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIHcTYU9eeHf9mn4i9nLi-EiDm5HefTJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
