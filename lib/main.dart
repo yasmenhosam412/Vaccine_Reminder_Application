@@ -10,7 +10,6 @@ import 'package:workmanager/workmanager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'MainScreen.dart';
 
-FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
