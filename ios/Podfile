@@ -3,5 +3,5 @@ platform :ios, '13.0'
 target 'Runner' do
   use_frameworks!
   pod 'Firebase/Analytics'
-  pod 'FirebaseFirestore'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '9.4.0'
 end
