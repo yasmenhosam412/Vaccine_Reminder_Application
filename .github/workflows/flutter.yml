@@ -28,7 +28,7 @@ jobs:
           pod install 
 
       - name: Build iOS app without code signing
-        run: flutter build ios --release --no-codesign
+        run: flutter build ipa --release --no-codesign
 
       - name: Upload IPA file as artifact
         uses: actions/upload-artifact@v4
