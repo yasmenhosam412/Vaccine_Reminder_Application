@@ -7,10 +7,11 @@ workflows:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "yasmen"
+      flutter: stable  # Use the latest stable Flutter version
 
     scripts:
-      - flutter clean  # Clean up previous build artifacts
-      - flutter pub get  # Get dependencies
+      - flutter clean  # Clean the previous build
+      - flutter pub get  # Install dependencies
       - flutter build ios --release --no-codesign  # Build without code signing
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
