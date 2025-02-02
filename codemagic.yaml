@@ -10,7 +10,7 @@ workflows:
       flutter: stable  # Ensure you're using the latest stable version of Flutter
 
     scripts:
-      - sudo gem install cocoapods  # Ensure CocoaPods is installed
+      - brew install cocoapods  # Install CocoaPods using Homebrew (avoiding Ruby version issue)
       - flutter clean  # Clean previous build artifacts
       - flutter pub get  # Install dependencies
       - flutter build ios --release --no-codesign  # Build without code signing
