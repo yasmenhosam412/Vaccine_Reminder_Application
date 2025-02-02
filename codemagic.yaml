@@ -8,7 +8,7 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - firebase_credentials  # Make sure this group contains your Firebase credentials
+        - firebase_credentials  # Ensure this contains FIREBASE_APP_ID & FIREBASE_TOKEN
     scripts:
       - name: Install Flutter dependencies
         script: flutter pub get
@@ -19,14 +19,17 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Build iOS Archive (Unsigned)
+      - name: Build iOS IPA (Unsigned)
         script: |
           flutter build ios --no-codesign --verbose
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath build/ios/archive/Runner.xcarchive
-
-      - name: Create .ipa File from Archive
-        script: |
           mkdir -p build/ios/ipa
+          xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            archive
+
           xcodebuild -exportArchive \
             -archivePath build/ios/archive/Runner.xcarchive \
             -exportPath build/ios/ipa \
@@ -36,16 +39,16 @@ workflows:
         script: |
           IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -n 1)
           if [[ -z "$IPA_PATH" ]]; then
-            echo "❌ Error: No IPA file found!"
+            echo "❌ No IPA file found!"
             exit 1
           fi
-          echo "✅ Found IPA file at: $IPA_PATH"
+          echo "✅ IPA found at: $IPA_PATH"
           echo "IPA_PATH=$IPA_PATH" >> $CM_ENV
 
-      - name: Upload .ipa to Firebase App Distribution
+      - name: Upload IPA to Firebase App Distribution
         script: |
           if [[ -z "$IPA_PATH" ]]; then
-            echo "❌ Error: IPA file not found!"
+            echo "❌ IPA file not found!"
             exit 1
           fi
 
@@ -53,9 +56,9 @@ workflows:
             -H "Authorization: Bearer $FIREBASE_TOKEN" \
             -F "file=@$IPA_PATH" \
             -F "app_id=$FIREBASE_APP_ID" \
-            -F "release_notes=New iOS build" \
+            -F "release_notes=New iOS build for testing" \
             -F "testers=$FIREBASE_TESTERS" \
-            https://firebaseappdistribution.googleapis.com/v1/projects/newpet-2453f/apps/$FIREBASE_APP_ID/releases
+            https://firebaseappdistribution.googleapis.com/v1/projects/YOUR_PROJECT_ID/apps/$FIREBASE_APP_ID/releases
 
 artifacts:
   - build/ios/ipa/*.ipa
