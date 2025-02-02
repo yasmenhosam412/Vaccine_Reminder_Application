@@ -45,7 +45,7 @@ workflows:
         script: |
           if [[ -z "$IPA_PATH" ]]; then
             echo "❌ IPA file not found!"
-            exit 1
+            exit 1 
           fi
 
           curl -X POST \
