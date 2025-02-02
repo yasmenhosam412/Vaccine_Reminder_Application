@@ -1,43 +1,35 @@
 workflows:
-  ios-workflow:
-    name: iOS Workflow
+  ios-build:
+    name: iOS Build
+    max_build_duration: 120
+    instance_type: mac_mini_m1
     environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
       groups:
-        - firebase # Reference a group of environment variables
-      vars:
-        FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8" # Replace with your Firebase app ID
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: main
-          include: true
-          source: true
+        - firebase_credentials
     scripts:
-      - name: Set up keychain
+      - name: Install Flutter dependencies
+        script: flutter pub get
+
+      - name: Build iOS App (Unsigned)
         script: |
-          keychain initialize
-      - name: Install Flutter
+          flutter build ipa --no-codesign
+
+      - name: Extract .ipa file path
         script: |
-          flutter doctor -v
-      - name: Install Firebase CLI
+          echo "IPA_PATH=$(find build/ios/ipa -name '*.ipa' | head -n 1)" >> $CM_ENV
+
+      - name: Upload .ipa to Firebase App Distribution
         script: |
-          npm install -g firebase-tools --force
-      - name: Decode Firebase token
-        script: |
-          FIREBASE_TOKEN=$(echo $FIREBASE_TOKEN | base64 --decode)
-      - name: Build iOS
-        script: |
-          flutter build ipa --release --export-options-plist=ExportOptions.plist
-      - name: Upload to Firebase App Distribution
-        script: |
-          firebase appdistribution:distribute build/ios/ipa/Runner.ipa \
-            --app $FIREBASE_APP_ID \
-            --token "$FIREBASE_TOKEN" \
-            --groups yasmen
-    artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - yasmenhosam412@gmail.com
+          curl -X POST \
+            -H "Authorization: Bearer $FIREBASE_TOKEN" \
+            -F "file=@$IPA_PATH" \
+            -F "app_id=$FIREBASE_APP_ID" \
+            -F "release_notes=New iOS build" \
+            -F "testers=$FIREBASE_TESTERS" \
+            https://firebaseappdistribution.googleapis.com/v1/projects/YOUR_PROJECT_ID/apps/YOUR_IOS_APP_ID/releases
+
+artifacts:
+  - build/ios/ipa/*.ipa
