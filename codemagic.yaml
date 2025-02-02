@@ -5,7 +5,7 @@ workflows:
     environment:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
-        TESTER_GROUPS: "testers"
+        TESTER_GROUPS: "yasmen"
     scripts:
       - flutter pub get
       - flutter build ios --release --no-codesign
