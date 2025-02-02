@@ -1,31 +1,15 @@
 workflows:
   ios_build:
     name: Build and Distribute iOS App
-    instance_type: mac_mini  # Set to mac_mini, mac_mini_m1, mac_mini_m2, etc.
+    instance_type: mac_mini  # Choose mac_mini, mac_mini_m1, mac_mini_m2, etc.
     environment:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "testers"
-    triggers:
-      - push
-    steps:
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build iOS (Release)
-        run: flutter build ios --release --no-codesign
-
-      - name: Archive the iOS App
-        run: |
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
-
-      - name: Export the .ipa file
-        run: |
-          xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
-
-      - name: Upload to Firebase App Distribution
-        run: |
-          curl -sL https://firebase.tools | bash
-          firebase appdistribution:distribute build/ios/ipa/Runner.ipa \
-            --app $FIREBASE_APP_ID \
-            --groups "$TESTER_GROUPS"
+    script:
+      - flutter pub get
+      - flutter build ios --release --no-codesign
+      - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
+      - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
+      - curl -sL https://firebase.tools | bash
+      - firebase appdistribution:distribute build/ios/ipa/Runner.ipa --app $FIREBASE_APP_ID --groups "$TESTER_GROUPS"
