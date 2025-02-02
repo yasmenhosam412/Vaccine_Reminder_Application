@@ -7,12 +7,13 @@ workflows:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "yasmen"
-      flutter: stable  # Make sure you're using the latest stable version of Flutter
+      flutter: stable  # Ensure you're using the latest stable version of Flutter
 
     scripts:
+      - sudo gem install cocoapods  # Ensure CocoaPods is installed
       - flutter clean  # Clean previous build artifacts
       - flutter pub get  # Install dependencies
-      - flutter build ios --release --no-codesign --no-cocoapods  # Build without code signing
+      - flutter build ios --release --no-codesign  # Build without code signing
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive -configuration Release -sdk iphoneos
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
       - curl -sL https://firebase.tools | bash
