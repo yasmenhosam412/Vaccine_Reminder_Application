@@ -28,12 +28,8 @@ workflows:
             -sdk iphoneos \
             -configuration Release \
             -archivePath build/ios/archive/Runner.xcarchive \
-            archive
-
-          xcodebuild -exportArchive \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -exportPath build/ios/ipa \
-            -exportOptionsPlist ios/Runner/ExportOptions.plist
+            archive \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM=""
 
       - name: Find IPA file
         script: |
