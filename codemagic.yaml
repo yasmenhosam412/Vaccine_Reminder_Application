@@ -11,7 +11,7 @@ workflows:
     scripts:
       - flutter clean
       - flutter pub get
-      - flutter build ios --release  # Remove --no-codesign
+      - flutter build ios --release --no-codesign  # Skip code signing
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
       - curl -sL https://firebase.tools | bash
