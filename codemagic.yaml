@@ -19,13 +19,21 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Build iOS App (Unsigned)
+      - name: Build iOS Archive (Unsigned)
         script: |
-          flutter build ipa --no-codesign --verbose
+          flutter build ios --no-codesign --verbose
+
+      - name: Create .ipa File from Archive
+        script: |
+          mkdir -p build/ios/ipa
+          xcodebuild -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ios/Runner/ExportOptions.plist
 
       - name: Find IPA file
         script: |
-          IPA_PATH=$(find build/ios/archive -name "*.ipa" | head -n 1)
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -n 1)
           if [[ -z "$IPA_PATH" ]]; then
             echo "❌ Error: No IPA file found!"
             exit 1
@@ -49,4 +57,4 @@ workflows:
             https://firebaseappdistribution.googleapis.com/v1/projects/newpet-2453f/apps/$FIREBASE_APP_ID/releases
 
 artifacts:
-  - build/ios/archive/*.ipa
+  - build/ios/ipa/*.ipa
