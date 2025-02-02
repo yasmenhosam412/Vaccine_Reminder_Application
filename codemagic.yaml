@@ -13,11 +13,17 @@ workflows:
       - name: Install Flutter dependencies
         script: flutter pub get
 
-      - name: Clean CocoaPods Cache
+      - name: Update CocoaPods dependencies
         script: |
           cd ios
+          pod update
           pod install --repo-update
-        
+
+      - name: Clean Derived Data
+        script: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+
 
       - name: Build iOS IPA (Unsigned)
         script: |
