@@ -1,19 +1,18 @@
 workflows:
   ios_build:
     name: Build and Distribute iOS App
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m1  # Ensure your billing plan supports this instance
 
     environment:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "yasmen"
-      flutter: stable  # Ensure you're using the latest stable version of Flutter
+      flutter: stable  # Ensures you’re using the latest Flutter stable release
 
     scripts:
-      - brew install cocoapods  # Install CocoaPods using Homebrew
-      - flutter clean  # Clean previous build artifacts
-      - flutter pub get  # Install dependencies
-      - flutter build ios --release --no-codesign --target-platform ios-arm64 --build-name 1.0.0 --build-number 1  # Build for iOS with specific settings
+      - flutter clean
+      - flutter pub get
+      - flutter build ios --release --no-codesign  # Builds iOS release version without signing
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive -configuration Release -sdk iphoneos
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
       - curl -sL https://firebase.tools | bash
