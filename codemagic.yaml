@@ -9,9 +9,9 @@ workflows:
         TESTER_GROUPS: "yasmen"
 
     scripts:
-      - flutter clean
-      - flutter pub get
-      - flutter build ios --release --no-codesign --simulator
+      - flutter clean  # Clean up previous build artifacts
+      - flutter pub get  # Get dependencies
+      - flutter build ios --release --no-codesign  # Build without code signing
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
       - curl -sL https://firebase.tools | bash
