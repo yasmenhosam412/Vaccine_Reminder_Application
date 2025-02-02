@@ -29,7 +29,7 @@ workflows:
             -F "app_id=$FIREBASE_APP_ID" \
             -F "release_notes=New iOS build" \
             -F "testers=$FIREBASE_TESTERS" \
-            https://firebaseappdistribution.googleapis.com/v1/projects/YOUR_PROJECT_ID/apps/YOUR_IOS_APP_ID/releases
+            https://firebaseappdistribution.googleapis.com/v1/projects/newpet-2453f/apps/1:430197957945:ios:7027d28210ae90c8a8b4e8/releases
 
 artifacts:
   - build/ios/ipa/*.ipa
