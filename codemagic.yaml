@@ -10,10 +10,10 @@ workflows:
       flutter: stable  # Ensure you're using the latest stable version of Flutter
 
     scripts:
-      - brew install cocoapods  # Install CocoaPods using Homebrew (avoiding Ruby version issue)
+      - brew install cocoapods  # Install CocoaPods using Homebrew
       - flutter clean  # Clean previous build artifacts
       - flutter pub get  # Install dependencies
-      - flutter build ios --release --no-codesign  # Build without code signing
+      - flutter build ios --release --no-codesign --target-platform ios-arm64 --build-name 1.0.0 --build-number 1  # Build for iOS with specific settings
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive -configuration Release -sdk iphoneos
       - xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
       - curl -sL https://firebase.tools | bash
