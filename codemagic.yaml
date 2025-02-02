@@ -8,7 +8,7 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - firebase_credentials
+        - firebase_credentials  # Make sure this group contains your Firebase credentials
     scripts:
       - name: Install Flutter dependencies
         script: flutter pub get
@@ -22,6 +22,7 @@ workflows:
       - name: Build iOS Archive (Unsigned)
         script: |
           flutter build ios --no-codesign --verbose
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath build/ios/archive/Runner.xcarchive
 
       - name: Create .ipa File from Archive
         script: |
