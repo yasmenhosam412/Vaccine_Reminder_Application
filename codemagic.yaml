@@ -6,29 +6,26 @@ workflows:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "testers"
-    jobs:
-      build:
-        name: Build iOS App
-        workflows:
-          - push
-        steps:
-          - name: Install dependencies
-            run: flutter pub get
+    triggers:
+      - push
+    steps:
+      - name: Install dependencies
+        run: flutter pub get
 
-          - name: Build iOS (Release)
-            run: flutter build ios --release --no-codesign
+      - name: Build iOS (Release)
+        run: flutter build ios --release --no-codesign
 
-          - name: Archive the iOS App
-            run: |
-              xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
+      - name: Archive the iOS App
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
 
-          - name: Export the .ipa file
-            run: |
-              xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
+      - name: Export the .ipa file
+        run: |
+          xcodebuild -exportArchive -archivePath $PWD/build/ios/archive/Runner.xcarchive -exportPath $PWD/build/ios/ipa -exportOptionsPlist ios/ExportOptions.plist
 
-          - name: Upload to Firebase App Distribution
-            run: |
-              curl -sL https://firebase.tools | bash
-              firebase appdistribution:distribute build/ios/ipa/Runner.ipa \
-                --app $FIREBASE_APP_ID \
-                --groups "$TESTER_GROUPS"
+      - name: Upload to Firebase App Distribution
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase appdistribution:distribute build/ios/ipa/Runner.ipa \
+            --app $FIREBASE_APP_ID \
+            --groups "$TESTER_GROUPS"
