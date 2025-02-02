@@ -8,7 +8,7 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - firebase_credentials  # Ensure this contains FIREBASE_APP_ID & FIREBASE_TOKEN
+        - firebase_credentials
     scripts:
       - name: Install Flutter dependencies
         script: flutter pub get
