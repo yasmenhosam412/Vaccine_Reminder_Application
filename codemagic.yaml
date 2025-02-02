@@ -16,10 +16,8 @@ workflows:
       - name: Clean CocoaPods Cache
         script: |
           cd ios
-          rm -rf Pods Podfile.lock
-          pod deintegrate
           pod install --repo-update
-          cd ..
+        
 
       - name: Build iOS IPA (Unsigned)
         script: |
