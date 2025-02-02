@@ -1,12 +1,12 @@
 workflows:
   ios_build:
     name: Build and Distribute iOS App
-    instance_type: mac_mini  # Choose mac_mini, mac_mini_m1, mac_mini_m2, etc.
+    instance_type: mac_mini  # You can use mac_mini, mac_mini_m1, mac_mini_m2, etc.
     environment:
       vars:
         FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
         TESTER_GROUPS: "testers"
-    script:
+    scripts:
       - flutter pub get
       - flutter build ios --release --no-codesign
       - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive -archivePath $PWD/build/ios/archive/Runner.xcarchive
