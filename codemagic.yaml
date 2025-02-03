@@ -1,41 +1,13 @@
 workflows:
-  ios-release:
-    name: iOS Release Build
-    instance_type: mac_mini_m1  # Ensure your Codemagic plan supports this
-
+  flutter-ios:
+    name: Flutter iOS Build
+    instance_type: mac_mini_m1
+    max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
-      vars:
-        FIREBASE_APP_ID: "1:430197957945:ios:7027d28210ae90c8a8b4e8"
-        TESTER_GROUPS: "yasmen"
-
     scripts:
-      - name: Install Dependencies
-        script: |
-          flutter clean
-          flutter pub get
-          cd ios
-          pod install --verbose --repo-update
-          cd ..
-      - name: Build iOS Without Code Signing
-        script: |
-          flutter build ios --release --no-codesign
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -archivePath $PWD/build/ios/archive/Runner.xcarchive \
-            -sdk iphoneos \
-            -configuration Release \
-            archive
-      - name: Export .ipa
-        script: |
-          xcodebuild -exportArchive \
-            -archivePath $PWD/build/ios/archive/Runner.xcarchive \
-            -exportPath $PWD/build/ios/ipa \
-            -exportOptionsPlist ios/ExportOptions.plist
-      - name: Upload to Firebase App Distribution
-        script: |
-          curl -sL https://firebase.tools | bash
-          firebase appdistribution:distribute build/ios/ipa/Runner.ipa \
-            --app $FIREBASE_APP_ID \
-            --groups "$TESTER_GROUPS"
+      - name: Build iOS IPA
+        script: flutter build ipa --release --no-codesign
+    artifacts:
+      - build/ios/ipa/*.ipa
