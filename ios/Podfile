@@ -1,4 +1,10 @@
-target 'Runner' do
- use_frameworks!
+platform :ios, '12.0'
 
+target 'Runner' do
+  use_frameworks!
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
 end

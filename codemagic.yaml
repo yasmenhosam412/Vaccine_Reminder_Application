@@ -1,20 +1,18 @@
 workflows:
-  ios-release:
-    name: iOS Release Build
+  ios:
+    name: iOS Build
     environment:
       flutter: stable
       xcode: latest
-
     scripts:
-      - name: Install Dependencies
+      - name: Clean the build
         script: |
           flutter clean
           cd ios
-          pod install --verbose --repo-update
+          pod install
           cd ..
-      - name: Build iOS Without Code Signing
+      - name: Build iOS IPA file without code signing
         script: |
           flutter build ipa --release --no-codesign
-
     artifacts:
       - build/ios/ipa/*.ipa
