@@ -1,13 +1,20 @@
 workflows:
-  flutter-ios:
-    name: Flutter iOS Build
-    instance_type: mac_mini_m1
-    max_build_duration: 60
+  ios-release:
+    name: iOS Release Build
     environment:
       flutter: stable
       xcode: latest
+
     scripts:
-      - name: Build iOS IPA
-        script: flutter build ipa --release --no-codesign
+      - name: Install Dependencies
+        script: |
+          flutter clean
+          cd ios
+          pod install --verbose --repo-update
+          cd ..
+      - name: Build iOS Without Code Signing
+        script: |
+          flutter build ipa --release --no-codesign
+
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/ipa/*.ipa  # Path to the generated .ipa file
