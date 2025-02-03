@@ -1,6 +1,23 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '12.0'
-target 'Runner' do
- use_frameworks!
+platform :ios, '11.0'
 
+# Uncomment the next line if you don't want to use dynamic frameworks
+# use_frameworks!
+
+target 'Runner' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Runner
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+
+  # Add any other Firebase pods you might be using, like:
+  # pod 'Firebase/Auth'
+  # pod 'Firebase/Messaging'
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
 end
