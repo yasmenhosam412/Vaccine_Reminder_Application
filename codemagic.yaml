@@ -12,7 +12,6 @@ workflows:
           pod install
           cd ..
 
-      # Step 2: Build the iOS app and generate .ipa
       - name: Build the iOS app and generate .ipa
         script: |
           flutter build ios --release --no-codesign
