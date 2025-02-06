@@ -6,6 +6,7 @@ workflows:
     scripts:
       - name: Clean and Install Dependencies
         script: |
+          set -e  # Stop execution if any command fails
           flutter clean
           flutter pub get
           cd ios
@@ -14,10 +15,23 @@ workflows:
 
       - name: Build the iOS app and generate .ipa
         script: |
+          set -e  # Stop execution if any command fails
           flutter build ios --release --no-codesign
           cd ios
+          
+          mkdir -p build/ios/archive
+          mkdir -p build/ios/ipa
+          
           # Archive the app
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -sdk iphoneos -archivePath build/ios/archive/Runner.xcarchive archive
+          xcodebuild -workspace Runner.xcworkspace \
+                     -scheme Runner \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -archivePath build/ios/archive/Runner.xcarchive archive
+          
           # Export the .ipa file
-          xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build/ios/ipa
+          xcodebuild -exportArchive \
+                     -archivePath build/ios/archive/Runner.xcarchive \
+                     -exportOptionsPlist ios/exportOptions.plist \
+                     -exportPath build/ios/ipa
           cd ..
