@@ -1,18 +1,25 @@
 workflows:
   ios:
-    name: iOS Build
+    name: Build iOS App
     environment:
       flutter: stable
-      xcode: latest
     scripts:
-      - name: Clean the build
+      # Step 1: Clean up and install dependencies
+      - name: Clean and Install Dependencies
         script: |
           flutter clean
+          flutter pub get
           cd ios
           pod install
           cd ..
-      - name: Build iOS IPA file without code signing
+
+      # Step 2: Build the iOS app and generate .ipa
+      - name: Build the iOS app and generate .ipa
         script: |
-          flutter build ipa --release --no-codesign
-    artifacts:
-      - build/ios/ipa/*.ipa
+          flutter build ios --release --no-codesign
+          cd ios
+          # Archive the app
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -sdk iphoneos -archivePath build/ios/archive/Runner.xcarchive archive
+          # Export the .ipa file
+          xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build/ios/ipa
+          cd ..
