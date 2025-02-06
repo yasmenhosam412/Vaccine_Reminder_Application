@@ -4,7 +4,6 @@ workflows:
     environment:
       flutter: stable
     scripts:
-      # Step 1: Clean up and install dependencies
       - name: Clean and Install Dependencies
         script: |
           flutter clean
