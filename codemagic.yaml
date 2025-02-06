@@ -19,7 +19,6 @@ workflows:
           flutter build ios --release --no-codesign
           cd ios
           
-          # Ensure build directories exist
           mkdir -p build/ios/archive
           mkdir -p build/ios/ipa
           
