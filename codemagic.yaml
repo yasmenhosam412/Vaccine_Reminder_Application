@@ -1,37 +1,34 @@
 workflows:
-  ios:
-    name: Build iOS App
+  ios-build:
+    name: iOS Build (Without Code Signing)
+    instance_type: mac_mini_m1
+    max_build_duration: 120
     environment:
       flutter: stable
+      xcode: 15.0
+      cocoapods: default
     scripts:
-      - name: Clean and Install Dependencies
+      - name: Install Flutter dependencies
+        script: flutter pub get
+
+      - name: Clean iOS dependencies
         script: |
-          set -e  # Stop execution if any command fails
-          flutter clean
-          flutter pub get
           cd ios
-          pod install
+          rm -rf Pods Podfile.lock
+          pod deintegrate
+          pod install --repo-update
           cd ..
 
-      - name: Build the iOS app and generate .ipa
+      - name: Ensure iOS Deployment Target is 12.0
         script: |
-          set -e  # Stop execution if any command fails
-          flutter build ios --release --no-codesign
-          cd ios
-          
-          mkdir -p build/ios/archive
-          mkdir -p build/ios/ipa
-          
-          # Archive the app
-          xcodebuild -workspace Runner.xcworkspace \
-                     -scheme Runner \
-                     -configuration Release \
-                     -sdk iphoneos \
-                     -archivePath build/ios/archive/Runner.xcarchive archive
-          
-          # Export the .ipa file
-          xcodebuild -exportArchive \
-                     -archivePath build/ios/archive/Runner.xcarchive \
-                     -exportOptionsPlist ios/exportOptions.plist \
-                     -exportPath build/ios/ipa
-          cd ..
+          sed -i '' 's/platform :ios, .*/platform :ios, "12.0"/' ios/Podfile
+
+      - name: Clean and Build iOS app (Without Code Signing)
+        script: |
+          flutter clean
+          flutter build ipa --release --no-codesign
+
+    artifacts:
+      - build/ios/iphoneos/*.ipa
+      - build/ios/iphoneos/*.app
+      - build/ios/archive/*.xcarchive
